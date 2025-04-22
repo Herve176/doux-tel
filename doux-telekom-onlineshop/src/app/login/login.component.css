@@ -1,0 +1,5 @@
+.active {
+  background-color: #0d6efd !important; /* Bootstrap Primary Color */
+  color: white !important;
+  border-color: #0d6efd !important;
+}

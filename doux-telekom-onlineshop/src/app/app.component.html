@@ -1,0 +1,34 @@
+<nav *ngIf="!isRegisterPage" class="navbar navbar-expand-lg navbar-light bg-light" id="navbar"
+  style="box-shadow: 8px 8px 5px whitesmoke;">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+    <!-- Logo auf der linken Seite -->
+    <a class="navbar-brand" href="#">Doux-Telekom</a>
+
+    <!-- Suchleiste und Button zentriert -->
+    <form class="form-inline d-flex mx-auto" id="search-form" action="/search" method="get" (submit)="onSearch($event)">
+      <input class="form-control form-control-lg me-2" type="search" placeholder="Search" aria-label="Search" id="bar"
+        style="width: 440px;">
+      <button class="btn btn-outline-success" type="submit" id="srbtn">Search</button>
+    </form>
+
+    <!-- Warenkorb und Profil-Icon auf der rechten Seite -->
+    <div class="d-flex">
+      <button style="border: none; background: none;" routerLink="/" routerLinkActive="active"
+        ariaCurrentWhenActive="page">
+        <div class="me-4"><i class="bi bi-house"></i></div>
+      </button>
+      <button style="border: none; background: none;" routerLink="/basket" routerLinkActive="active"
+        ariaCurrentWhenActive="page">
+        <div class="me-0"><i class="bi bi-cart3" id="cart">cart</i></div>
+      </button>
+      <div class="me-4">
+        <span id="basket-count" class="badge-circle">{{ cartCount() }}</span>
+      </div>
+      <button style="border: none; background: none;" routerLink="/login" routerLinkActive="active"
+        ariaCurrentWhenActive="page">
+        <div><i class="bi bi-person-fill" id="profile">Account</i></div>
+      </button>
+    </div>
+  </div>
+</nav>
+<router-outlet></router-outlet>

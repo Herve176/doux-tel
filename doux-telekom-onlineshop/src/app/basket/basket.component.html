@@ -1,0 +1,26 @@
+<div class="basket-container">
+  <h2>Your Cart has {{ totalItems() }} items</h2>
+
+  <div *ngIf="cartItems().length === 0" class="empty-cart">
+    Your cart is empty
+  </div>
+
+  <ul class="cart-items" *ngIf="cartItems().length > 0">
+    <li *ngFor="let item of cartItems(); index as i; trackBy: trackByFn" class="cart-item">
+      <img [src]="item.image" [alt]="item.name" class="item-image">
+      <div class="item-details">
+        <h3>{{ item.name }}</h3>
+        <p>{{ item.description }}</p>
+        <p class="price">{{ item.price | number:'1.0-0' }}FCFA</p>
+      </div>
+      <button (click)="removeItem(i)" class="remove-btn">
+        Remove
+      </button>
+    </li>
+  </ul>
+
+  <div *ngIf="cartItems().length > 0" class="cart-summary">
+    <h3>Total: {{ totalPrice() | number:'1.0-0' }}FCFA</h3>
+    <button class="checkout-btn">Proceed to Checkout</button>
+  </div>
+</div>
