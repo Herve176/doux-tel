@@ -1,0 +1,37 @@
+#cart{
+  size: 100px;
+}
+#cart:hover{
+  cursor: pointer;
+  color: green;
+}
+#cart:active{
+  color: red;
+}
+#cart:focus{
+  color: blue;
+}
+#profile{
+  size: 100px;
+}
+#profile:hover{
+  cursor: pointer;
+  color: green;
+}
+#profile:active{
+  color: red;
+}
+.badge-circle {
+  display: inline-block;
+  width: 20px; /* Adjust size */
+  height: 18px; /* Adjust size */
+  line-height: 24px; /* Center text vertically */
+  text-align: center;
+  border-radius: 45%; /* Makes it a circle */
+  background-color: blue; /* Blue background */
+  color: white; /* White text */
+  font-size: 12px; /* Adjust font size */
+  font-weight: bold; /* Make text bold */
+  margin-top: 15px;
+  margin-right: 50px;
+}
