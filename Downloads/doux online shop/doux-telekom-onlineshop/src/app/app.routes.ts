@@ -10,8 +10,10 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { checkoutGuardGuard } from './checkout-guard.guard';
 import { ApplicationConfig } from '@angular/core';
+import { GoogleCallbackComponent } from './google-callback/google-callback.component';
 export const routes: Routes = [
   { path: 'details/:id', component: DetailsComponent },
+  { path: 'auth/google/callback', component: GoogleCallbackComponent },
   { path: 'basket', component: BasketComponent },
   {
     path: 'checkout',

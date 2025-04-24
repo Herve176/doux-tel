@@ -33,21 +33,6 @@ export class LoginComponent implements OnInit {
     });
   }
   ngOnInit(): void { // Initialize Google Sign-In callback
-    (window as any).onGoogleSignIn = (response: any) => {
-      console.log('we are in function');
-      const idToken = response.credential; // Capture the ID token
-      console.log('Google ID Token:', idToken);
-
-      // Send the ID token to the backend for verification
-      this.authService.googleLogin(idToken).subscribe({
-        next: (res) => {
-          console.log('Google login successful:', res);
-        },
-        error: (err) => {
-          console.error('Google login failed:', err);
-        },
-      });
-    };
   }
 
   onSubmit(successToast: TemplateRef<any>, errorToast: TemplateRef<any>): void {

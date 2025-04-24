@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { User } from './model/model';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { ToastService } from './service/services/toast-service';
@@ -11,7 +11,7 @@ import { ToastService } from './service/services/toast-service';
 export class AuthserviceService {
   private http = inject(HttpClient);
   private router = inject(Router); // Router injizieren
-  private readonly API_URL = 'http://localhost:8081/'; // URL der API
+  private readonly API_URL = 'http://localhost:8081'; // URL der API
   private readonly TOKEN_KEY = 'token'; // Schlüssel für das Token im LocalStorage
   constructor(private toastService: ToastService) {}
   // Überprüfen, ob der Benutzer eingeloggt ist
@@ -79,29 +79,60 @@ export class AuthserviceService {
   googleLogin(idToken: string): Observable<any> {
     return new Observable((observer) => {
       this.http
-        .post<{ token: string }>(`${this.API_URL}/api/auth/google`, { idToken })
+        .post<{ token: string }>(
+          `${this.API_URL}/api/auth/google`,
+          { id_token: idToken }, // Changed key to match backend expectation
+          {
+            headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+            observe: 'response', // Get full HttpResponse
+          }
+        )
         .subscribe({
           next: (response) => {
-            this.setToken(response.token); // Save the token in localStorage
-            this.router.navigate(['/home']); // Redirect to home
-            observer.next(response);
+            if (response.body?.token) {
+              this.setToken(response.body.token);
+              this.router.navigate(['/home']);
+              observer.next(response.body);
+
+              this.toastService.show({
+                template: `<div class="toast-body">Google login successful!</div>`,
+                classname: 'bg-success text-light',
+                delay: 5000,
+              });
+            } else {
+              throw new Error('No token received');
+            }
             observer.complete();
-            // Show success toast
-            this.toastService.show({
-              template: `<div class="toast-body">Google login successful!</div>`,
-              classname: 'bg-success text-light',
-              delay: 5000,
-            }); // Show success toast
           },
-          error: (error) => {
-            observer.error(error);
+          error: (error: HttpErrorResponse) => {
+            let errorMessage = 'Google login failed. Please try again.';
+
+            // Handle JSON error responses
+            if (error.error instanceof Object) {
+              errorMessage = error.error.error || JSON.stringify(error.error);
+            }
+            // Handle text/plain responses
+            else if (typeof error.error === 'string') {
+              try {
+                const parsedError = JSON.parse(error.error);
+                errorMessage = parsedError.error || error.error;
+              } catch {
+                errorMessage = error.error;
+              }
+            }
+
             this.toastService.show({
-              template: `<div class="toast-body">Google login failed. Please try again.</div>`,
+              template: `<div class="toast-body">${errorMessage}</div>`,
               classname: 'bg-danger text-light',
               delay: 5000,
             });
+
+            observer.error(error);
           },
         });
     });
+  }
+  exchangeCodeForToken(code: string): Observable<any> {
+    return this.http.post(`${this.API_URL}/api/auth/google`, { code });
   }
 }
